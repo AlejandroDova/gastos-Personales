@@ -1,7 +1,5 @@
 
 # 📊 Dashboard de Gastos Personales - Next.js
-
-![Dashboard Preview](https://i.imgur.com/JQh8GXp.png)  
 ![image](https://github.com/user-attachments/assets/a084f349-161c-49f8-90f2-ad03c23fbca7)
 
 ## 🚀 Características Principales
