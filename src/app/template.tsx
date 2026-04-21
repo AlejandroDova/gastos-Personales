@@ -1,9 +1,34 @@
 'use client'
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Navbar from '../components/Dashboard/Navbar'
 import Sidebar from '../components/Dashboard/Sidebar'
+import { getIdToken } from '../lib/auth'
+import useStore from '../store/store'
 
 export default function DashboardTemplate({ children }: { children: ReactNode }) {
+  const router = useRouter()
+  const [checking, setChecking] = useState(true)
+  const fetchAll = useStore((s) => s.fetchAll)
+
+  useEffect(() => {
+    getIdToken().then((token) => {
+      if (!token) {
+        router.replace('/login')
+      } else {
+        fetchAll().finally(() => setChecking(false))
+      }
+    })
+  }, [fetchAll, router])
+
+  if (checking) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p className="text-gray-500">Cargando...</p>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar />

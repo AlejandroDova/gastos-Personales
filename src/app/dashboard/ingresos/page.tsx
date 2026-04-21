@@ -1,42 +1,36 @@
 'use client'
 
-import ExpenseList from '@/components/Dashboard/ExpenseList'
-import RecurringSelect from '@/components/Ui/RecurringSelect'
+import IncomeList from '@/components/Dashboard/IncomeList'
 import useStore from '../../../store/store'
 import { useState } from 'react'
-import { RecurringFrequency } from 'src/store/store'
 
-export default function ExpensesPage() {
-  const { expenses, addExpense, removeExpense } = useStore()
-  const [newExpense, setNewExpense] = useState({
+export default function IngresosPage() {
+  const { incomes, addIncome, removeIncome } = useStore()
+  const [newIncome, setNewIncome] = useState({
     description: '',
     amount: '',
-    category: '',
-    date: new Date().toISOString().split('T')[0],
+    source: '',
+    date: new Date().toISOString().split('T')[0]
   })
-  const [isRecurring, setIsRecurring] = useState(false)
-  const [frequency, setFrequency] = useState<RecurringFrequency>('monthly')
   const [submitting, setSubmitting] = useState(false)
 
-  const handleAddExpense = async (e: React.FormEvent) => {
+  const handleAddIncome = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newExpense.description || !newExpense.amount) return
+    if (!newIncome.description || !newIncome.amount) return
     setSubmitting(true)
     try {
-      await addExpense({
-        description: newExpense.description,
-        amount: Number(newExpense.amount),
-        category: newExpense.category,
-        date: newExpense.date,
-        ...(isRecurring && { recurring: frequency }),
+      await addIncome({
+        description: newIncome.description,
+        amount: Number(newIncome.amount),
+        source: newIncome.source,
+        date: newIncome.date
       })
-      setNewExpense({
+      setNewIncome({
         description: '',
         amount: '',
-        category: '',
-        date: new Date().toISOString().split('T')[0],
+        source: '',
+        date: new Date().toISOString().split('T')[0]
       })
-      setIsRecurring(false)
     } finally {
       setSubmitting(false)
     }
@@ -44,11 +38,11 @@ export default function ExpensesPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Gastos</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Ingresos</h1>
 
       <div className="bg-white shadow rounded-lg p-6 mb-6">
-        <h2 className="text-lg font-medium text-gray-900 mb-4">Agregar nuevo gasto</h2>
-        <form onSubmit={handleAddExpense} className="space-y-4">
+        <h2 className="text-lg font-medium text-gray-900 mb-4">Agregar nuevo ingreso</h2>
+        <form onSubmit={handleAddIncome} className="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label htmlFor="description" className="block text-sm font-medium text-gray-700">
@@ -58,8 +52,8 @@ export default function ExpensesPage() {
                 type="text"
                 id="description"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                value={newExpense.description}
-                onChange={(e) => setNewExpense({ ...newExpense, description: e.target.value })}
+                value={newIncome.description}
+                onChange={(e) => setNewIncome({ ...newIncome, description: e.target.value })}
               />
             </div>
             <div>
@@ -70,22 +64,22 @@ export default function ExpensesPage() {
                 type="number"
                 id="amount"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                value={newExpense.amount}
-                onChange={(e) => setNewExpense({ ...newExpense, amount: e.target.value })}
+                value={newIncome.amount}
+                onChange={(e) => setNewIncome({ ...newIncome, amount: e.target.value })}
               />
             </div>
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-                Categoría
+              <label htmlFor="source" className="block text-sm font-medium text-gray-700">
+                Fuente
               </label>
               <input
                 type="text"
-                id="category"
+                id="source"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                value={newExpense.category}
-                onChange={(e) => setNewExpense({ ...newExpense, category: e.target.value })}
+                value={newIncome.source}
+                onChange={(e) => setNewIncome({ ...newIncome, source: e.target.value })}
               />
             </div>
             <div>
@@ -96,28 +90,22 @@ export default function ExpensesPage() {
                 type="date"
                 id="date"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                value={newExpense.date}
-                onChange={(e) => setNewExpense({ ...newExpense, date: e.target.value })}
+                value={newIncome.date}
+                onChange={(e) => setNewIncome({ ...newIncome, date: e.target.value })}
               />
             </div>
           </div>
-          <RecurringSelect
-            enabled={isRecurring}
-            frequency={frequency}
-            onToggle={setIsRecurring}
-            onFrequencyChange={setFrequency}
-          />
           <button
             type="submit"
             disabled={submitting}
             className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
           >
-            {submitting ? 'Guardando...' : 'Agregar Gasto'}
+            {submitting ? 'Guardando...' : 'Agregar Ingreso'}
           </button>
         </form>
       </div>
 
-      <ExpenseList expenses={expenses} onRemove={removeExpense} />
+      <IncomeList incomes={incomes} onRemove={removeIncome} />
     </div>
   )
 }

@@ -1,14 +1,16 @@
-export default function SummaryCards({ 
-  totalExpenses, 
-  totalDebts, 
-  pendingDebts 
+export default function SummaryCards({
+  totalExpenses,
+  totalDebts,
+  pendingDebts,
+  totalIncomes
 }: {
   totalExpenses: number
   totalDebts: number
   pendingDebts: number
+  totalIncomes: number
 }) {
   return (
-    <div className="grid gap-6 mb-8 md:grid-cols-3">
+    <div className="grid gap-6 mb-8 md:grid-cols-4">
       <div className="bg-white p-6 rounded-lg shadow">
         <div className="flex items-center">
           <div className="p-3 rounded-full bg-indigo-100 text-indigo-600">
@@ -47,6 +49,20 @@ export default function SummaryCards({
           <div className="ml-4">
             <p className="text-sm font-medium text-gray-600">Total de deudas</p>
             <p className="text-lg font-semibold text-gray-700">${totalDebts.toFixed(2)}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex items-center">
+          <div className="p-3 rounded-full bg-emerald-100 text-emerald-600">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+          </div>
+          <div className="ml-4">
+            <p className="text-sm font-medium text-gray-600">Total ingresos</p>
+            <p className="text-lg font-semibold text-emerald-600">${totalIncomes.toFixed(2)}</p>
           </div>
         </div>
       </div>

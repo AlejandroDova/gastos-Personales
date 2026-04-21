@@ -1,10 +1,10 @@
 import { CheckIcon, TrashIcon } from '@heroicons/react/24/outline'
-import { Debt }  from '../../store/store'
+import { Debt } from '../../store/store'
 
 interface DebtListProps {
-  debts: Debt[];
-  onPay: (id: number) => void;
-  onRemove: (id: number) => void;
+  debts: Debt[]
+  onPay: (id: string) => void
+  onRemove: (id: string) => void
 }
 
 export default function DebtList({ debts, onPay, onRemove }: DebtListProps) {
@@ -13,7 +13,7 @@ export default function DebtList({ debts, onPay, onRemove }: DebtListProps) {
       <div className="bg-white shadow rounded-lg p-6">
         <p className="text-gray-500">No hay deudas registradas</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -27,8 +27,8 @@ export default function DebtList({ debts, onPay, onRemove }: DebtListProps) {
             <div>
               <p className="font-medium text-gray-900">{debt.description}</p>
               <p className="text-sm text-gray-500">
-                Vence el {new Date(debt.dueDate).toLocaleDateString()} • 
-                <span className={`ml-2 ${debt.paid ? 'text-green-600' : 'text-red-600'}`}>
+                Vence el {new Date(debt.dueDate).toLocaleDateString()} •{' '}
+                <span className={`ml-1 ${debt.paid ? 'text-green-600' : 'text-red-600'}`}>
                   {debt.paid ? 'Pagada' : 'Pendiente'}
                 </span>
               </p>
@@ -56,5 +56,5 @@ export default function DebtList({ debts, onPay, onRemove }: DebtListProps) {
         ))}
       </div>
     </div>
-  );
+  )
 }

@@ -1,12 +1,12 @@
 import { TrashIcon } from '@heroicons/react/24/outline'
-import {Expense} from '../../store/store'
+import { Expense } from '../../store/store'
 
-export default function ExpenseList({ 
-  expenses, 
-  onRemove 
+export default function ExpenseList({
+  expenses,
+  onRemove
 }: {
   expenses: Expense[]
-  onRemove: (id: number) => void
+  onRemove: (id: string) => void
 }) {
   if (expenses.length === 0) {
     return (
@@ -28,6 +28,7 @@ export default function ExpenseList({
               <p className="font-medium text-gray-900">{expense.description}</p>
               <p className="text-sm text-gray-500">
                 {expense.category} • {new Date(expense.date).toLocaleDateString()}
+                {expense.recurring && <span className="ml-2 text-indigo-500">↻ {expense.recurring}</span>}
               </p>
             </div>
             <div className="flex items-center">

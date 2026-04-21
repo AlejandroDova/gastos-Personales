@@ -4,6 +4,7 @@ const navigation = [
   { name: 'Inicio', href: '/dashboard', icon: '🏠' },
   { name: 'Gastos', href: '/dashboard/gastos', icon: '💸' },
   { name: 'Deudas', href: '/dashboard/deudas', icon: '📝' },
+  { name: 'Ingresos', href: '/dashboard/ingresos', icon: '💰' },
 ]
 
 export default function Sidebar() {
