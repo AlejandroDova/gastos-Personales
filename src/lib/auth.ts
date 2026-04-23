@@ -1,3 +1,5 @@
+'use client'
+
 import { Amplify } from 'aws-amplify'
 import {
   signIn as amplifySignIn,
@@ -5,6 +7,7 @@ import {
   signUp as amplifySignUp,
   fetchAuthSession,
   confirmSignUp as amplifyConfirmSignUp,
+  confirmSignIn as amplifyConfirmSignIn,
 } from 'aws-amplify/auth'
 
 Amplify.configure({
@@ -29,6 +32,16 @@ export async function confirmSignUp(email: string, code: string) {
   return amplifyConfirmSignUp({ username: email, confirmationCode: code })
 }
 
+export async function confirmNewPassword(
+  newPassword: string,
+  userAttributes?: Record<string, string>
+) {
+  return amplifyConfirmSignIn({
+    challengeResponse: newPassword,
+    options: userAttributes ? { userAttributes } : undefined,
+  })
+}
+
 export async function signOut() {
   return amplifySignOut()
 }
@@ -37,6 +50,16 @@ export async function getIdToken(): Promise<string | null> {
   try {
     const session = await fetchAuthSession()
     return session.tokens?.idToken?.toString() ?? null
+  } catch {
+    return null
+  }
+}
+
+export async function getUserEmail(): Promise<string | null> {
+  try {
+    const session = await fetchAuthSession()
+    const payload = session.tokens?.idToken?.payload
+    return (payload?.email as string) ?? null
   } catch {
     return null
   }

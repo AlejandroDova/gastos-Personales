@@ -1,4 +1,4 @@
-import { getIdToken } from './auth'
+import { getIdToken, signOut } from './auth'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 
@@ -17,6 +17,13 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   }
 
   const res = await fetch(`${BASE_URL}${path}`, { ...options, headers })
+  if (res.status === 401) {
+    await signOut().catch(() => {})
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login'
+    }
+    throw new ApiError(401, 'Session expired')
+  }
   if (!res.ok) {
     const body = await res.json().catch(() => ({ message: res.statusText }))
     throw new ApiError(res.status, body.message ?? res.statusText)

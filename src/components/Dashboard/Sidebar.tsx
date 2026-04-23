@@ -1,4 +1,10 @@
+'use client'
+
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
+import { getUserEmail, signOut } from '../../lib/auth'
 
 const navigation = [
   { name: 'Inicio', href: '/dashboard', icon: '🏠' },
@@ -8,15 +14,29 @@ const navigation = [
 ]
 
 export default function Sidebar() {
+  const router = useRouter()
+  const [email, setEmail] = useState<string | null>(null)
+
+  useEffect(() => {
+    getUserEmail().then(setEmail)
+  }, [])
+
+  const handleLogout = async () => {
+    await signOut().catch(() => {})
+    router.replace('/login')
+  }
+
   return (
     <>
-      {/* Sidebar móvil (implementar lógica de toggle) */}
-      
-      {/* Sidebar desktop */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-gray-200 lg:bg-white lg:pb-4 lg:pt-5">
         <div className="flex items-center flex-shrink-0 px-6">
           <h1 className="text-xl font-semibold text-gray-900">Mis Gastos</h1>
         </div>
+        {email && (
+          <div className="mt-2 px-6">
+            <p className="text-xs text-gray-500 truncate" title={email}>{email}</p>
+          </div>
+        )}
         <div className="mt-5 flex flex-1 flex-col overflow-y-auto">
           <nav className="flex-1 space-y-1 px-2">
             {navigation.map((item) => (
@@ -30,6 +50,15 @@ export default function Sidebar() {
               </Link>
             ))}
           </nav>
+          <div className="px-2 pt-4 border-t border-gray-200">
+            <button
+              onClick={handleLogout}
+              className="w-full group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-red-50 hover:text-red-700"
+            >
+              <ArrowRightOnRectangleIcon className="mr-3 h-5 w-5" />
+              Cerrar sesión
+            </button>
+          </div>
         </div>
       </div>
     </>

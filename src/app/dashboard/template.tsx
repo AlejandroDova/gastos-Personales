@@ -1,10 +1,10 @@
 'use client'
 import { ReactNode, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Navbar from '../components/Dashboard/Navbar'
-import Sidebar from '../components/Dashboard/Sidebar'
-import { getIdToken } from '../lib/auth'
-import useStore from '../store/store'
+import Navbar from '../../components/Dashboard/Navbar'
+import Sidebar from '../../components/Dashboard/Sidebar'
+import { getIdToken } from '../../lib/auth'
+import useStore from '../../store/store'
 
 export default function DashboardTemplate({ children }: { children: ReactNode }) {
   const router = useRouter()
@@ -12,13 +12,33 @@ export default function DashboardTemplate({ children }: { children: ReactNode })
   const fetchAll = useStore((s) => s.fetchAll)
 
   useEffect(() => {
-    getIdToken().then((token) => {
-      if (!token) {
+    let done = false
+    const timeout = setTimeout(() => {
+      if (!done) {
+        console.warn('template: getIdToken timeout → /login')
         router.replace('/login')
-      } else {
-        fetchAll().finally(() => setChecking(false))
       }
-    })
+    }, 3000)
+
+    getIdToken()
+      .then((token) => {
+        done = true
+        clearTimeout(timeout)
+        console.log('template token:', token ? 'found' : 'none')
+        if (!token) {
+          router.replace('/login')
+        } else {
+          fetchAll().finally(() => setChecking(false))
+        }
+      })
+      .catch((err) => {
+        done = true
+        clearTimeout(timeout)
+        console.error('template getIdToken error:', err)
+        router.replace('/login')
+      })
+
+    return () => clearTimeout(timeout)
   }, [fetchAll, router])
 
   if (checking) {
